@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import br.rio.puc.bd3.t1.model.Categoria;
+import br.rio.puc.bd3.t1.model.Competidor;
 
 public class Conexao_DB
 {
@@ -45,7 +46,7 @@ public class Conexao_DB
 
     public void insereCategoria(Categoria cat) throws SQLException {
 	CallableStatement insere = con
-		.prepareCall("{ CALL inserir_Categoria(?,?,?,?) }");
+		.prepareCall("{ CALL inserir_Categoria(?,?,?,?,?) }");
 	try {
 	    insere.setString(1, cat.getNome());
 	    insere.setDate(2, new Date(cat.getDataSelectivas().getTime()));
@@ -58,23 +59,17 @@ public class Conexao_DB
 	}
     }
 
-    void insereCompetidor()
-    {
-
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
+    public void insereCompetidor(Competidor comp) throws SQLException {
+	CallableStatement insere = con
+		.prepareCall("{ CALL inserir_Competidor(?,?,?) }");
+	try {
+	    insere.setString(1, comp.getNome());
+	    insere.setString(2, comp.getNacionalidade());
+	    insere.setDate(3, new Date(comp.getDataDeNacimento().getTime()));
+	    insere.execute();
+	} finally {
+	    insere.close();
 	}
-
     }
 
     void insereBateria()
@@ -318,4 +313,8 @@ public class Conexao_DB
 	con.close();
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+	close();
+    }
 }
