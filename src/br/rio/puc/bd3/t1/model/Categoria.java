@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class Categoria {
 
+    private final int id;
+
     private final String nome;
 
     private final Date dataSelectivas;
@@ -16,12 +18,23 @@ public class Categoria {
 
     public Categoria(String nome, Date dataSelectivas, Date dataQuartasDeFinal,
 	    Date dataSemifinais, Date dataFinal) {
-	super();
+	this(-1, nome, dataSelectivas, dataQuartasDeFinal, dataSemifinais,
+		dataFinal);
+    }
+
+    public Categoria(int id, String nome, Date dataSelectivas,
+	    Date dataQuartasDeFinal,
+	    Date dataSemifinais, Date dataFinal) {
+	this.id = id;
 	this.nome = nome;
 	this.dataSelectivas = dataSelectivas;
 	this.dataQuartasDeFinal = dataQuartasDeFinal;
 	this.dataSemifinais = dataSemifinais;
 	this.dataFinal = dataFinal;
+    }
+
+    public int getId() {
+	return id;
     }
 
     public String getNome() {

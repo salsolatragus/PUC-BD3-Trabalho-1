@@ -3,6 +3,7 @@ package br.rio.puc.bd3.t1.ui;
 import java.sql.SQLException;
 
 import br.rio.puc.bd3.t1.dao.Conexao_DB;
+import br.rio.puc.bd3.t1.model.Participacao;
 
 public class MenuCompetidor extends AMenu {
 
@@ -27,7 +28,7 @@ public class MenuCompetidor extends AMenu {
 	    criaCompetidor();
 	    break;
 	case REGISTRAR:
-
+	    criaParticipacao();
 	    break;
 	}
     }
@@ -38,6 +39,35 @@ public class MenuCompetidor extends AMenu {
 
 	try {
 	    con.insereCompetidor(cat.getCompetidor());
+	} catch (SQLException sqle) {
+	    sqle.printStackTrace(System.err);
+	}
+    }
+
+    private void criaParticipacao() {
+	try {
+	    (new MenuSeleccaoCompetidor(con.getCompetidores()) {
+		@Override
+		protected void opcaoSelectionado(final int competidorId) {
+		    try {
+			(new MenuSeleccaoCategoria(con.getCategorias()) {
+			    @Override
+			    protected void opcaoSelectionado(
+				    final int categoriaId) {
+				try {
+				    con.insereParticipacao(new Participacao(
+					    categoriaId, competidorId));
+				} catch (SQLException sqle) {
+				    sqle.printStackTrace(System.err);
+				}
+
+			    }
+			}).show();
+		    } catch (SQLException sqle) {
+			sqle.printStackTrace(System.err);
+		    }
+		}
+	    }).show();
 	} catch (SQLException sqle) {
 	    sqle.printStackTrace(System.err);
 	}

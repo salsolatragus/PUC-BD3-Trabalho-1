@@ -5,10 +5,15 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.rio.puc.bd3.t1.model.Categoria;
 import br.rio.puc.bd3.t1.model.Competidor;
+import br.rio.puc.bd3.t1.model.Participacao;
 
 public class Conexao_DB
 {
@@ -72,39 +77,15 @@ public class Conexao_DB
 	}
     }
 
-    void insereBateria()
-    {
-
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
-	}
-    }
-
-    void insereBateriaCompetidor()
-    {
-
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
+    public void insereParticipacao(Participacao p) throws SQLException {
+	CallableStatement registra = con
+		.prepareCall("{ CALL registrar_por_Categoria(?,?) }");
+	try {
+	    registra.setInt(1, p.getCompetidor());
+	    registra.setInt(2, p.getCategoria());
+	    registra.execute();
+	} finally {
+	    registra.close();
 	}
     }
 
@@ -147,76 +128,58 @@ public class Conexao_DB
 	}
     }
 
-    void alteraCompetidor()
-    {
-	String sql = null;
+    /**************************************************
+     * Métodos de Leitura
+     ************************************************/
 
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
+    public List<Categoria> getCategorias() throws SQLException {
+	List<Categoria> categorias = new ArrayList<Categoria>();
+	Statement leitura = con.createStatement();
+	try {
+	    ResultSet res = leitura
+		    .executeQuery("SELECT Id, Nome, Data_selectivas, Data_quartas_de_final, Data_semifinais, Data_final FROM Categoria");
+	    try {
+		while (res.next()) {
+		    int id = res.getInt(1);
+		    String nome = res.getString(2);
+		    java.util.Date selectivas = res.getDate(3);
+		    java.util.Date quartas = res.getDate(4);
+		    java.util.Date semifinais = res.getDate(5);
+		    java.util.Date ofinal = res.getDate(6);
+		    categorias.add(new Categoria(id, nome, selectivas, quartas,
+			    semifinais, ofinal));
+		}
+	    } finally {
+		res.close();
+	    }
+	} finally {
+	    leitura.close();
 	}
-
+	return categorias;
     }
 
-    void alteraBateria()
-    {
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
+    public List<Competidor> getCompetidores() throws SQLException {
+	List<Competidor> competidores = new ArrayList<Competidor>();
+	Statement leitura = con.createStatement();
+	try {
+	    ResultSet res = leitura
+		    .executeQuery("SELECT Id, Nome, Nacionalidade, Data_de_nacimento FROM Competidor");
+	    try {
+		while (res.next()) {
+		    int id = res.getInt(1);
+		    String nome = res.getString(2);
+		    String nacionalidade = res.getString(3);
+		    java.util.Date nacimento = res.getDate(4);
+		    competidores.add(new Competidor(id, nome, nacionalidade,
+			    nacimento));
+		}
+	    } finally {
+		res.close();
+	    }
+	} finally {
+	    leitura.close();
 	}
-
-    }
-
-    void alteraBateriaCompetidor()
-    {
-
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
-	}
-    }
-
-    void alteraResultado()
-    {
-
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
-	}
+	return competidores;
     }
 
     /**************************************************
@@ -224,75 +187,6 @@ public class Conexao_DB
      ************************************************/
 
     void deletaCategoria()
-    {
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
-	}
-    }
-
-    void deletaCompetidor()
-    {
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
-	}
-    }
-
-    void deletaBateria()
-    {
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
-	}
-    }
-
-    void deletaBateriaCompetidor()
-    {
-
-	String sql = null;
-
-	try
-	{
-	    con.prepareStatement(sql);
-
-	    con.close();
-	    stm.close();
-
-	} catch (SQLException e)
-	{
-
-	}
-    }
-
-    void deletaResultado()
     {
 	String sql = null;
 

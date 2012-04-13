@@ -20,22 +20,31 @@ public abstract class AMenu {
 
     private final Opcao[] opcoes;
 
-    public AMenu(String titulo, Opcao[] opcoes) {
+    private final boolean manualSair;
+
+    public AMenu(String titulo, Opcao[] opcoes, boolean manualSair) {
 	this.titulo = titulo;
 	this.opcoes = opcoes;
+	this.manualSair = manualSair;
+    }
+
+    public AMenu(String titulo, Opcao[] opcoes) {
+	this(titulo, opcoes, true);
     }
 
     public void show() {
 	int seleccao = -1;
 	Scanner res = new Scanner(System.in);
-	while (seleccao != 0) {
+	do {
 	    System.out.println("====================");
 	    System.out.println("= " + titulo);
 	    System.out.println("====================");
 	    for (int i = 0; i < opcoes.length; i++) {
 		System.out.println("[" + (i + 1) + "] " + opcoes[i].nome);
 	    }
-	    System.out.println("[0] Sair");
+	    if (manualSair) {
+		System.out.println("[0] Sair");
+	    }
 	    System.out.println("====================");
 	    do {
 		System.out.print("Digite selecção: ");
@@ -58,7 +67,7 @@ public abstract class AMenu {
 	    if (seleccao > 0) {
 		opcaoSelectionado(opcoes[seleccao - 1].id);
 	    }
-	}
+	} while (seleccao != 0 && manualSair);
     }
 
     protected abstract void opcaoSelectionado(int id);
