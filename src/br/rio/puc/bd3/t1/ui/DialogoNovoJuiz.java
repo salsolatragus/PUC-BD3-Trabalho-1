@@ -1,5 +1,6 @@
 package br.rio.puc.bd3.t1.ui;
 
+import br.rio.puc.bd3.t1.model.Bateria;
 import br.rio.puc.bd3.t1.model.Resultado;
 
 public class DialogoNovoJuiz extends ADialogo
@@ -30,7 +31,8 @@ public class DialogoNovoJuiz extends ADialogo
     {
 	int desclassificado = getValorInt(DESCLASSIFICADO);
 	int tempo = getValorInt(TEMPO);
-	return new Resultado(competidor, bateria, desclassificado, tempo);
+	return new Resultado(competidor, new Bateria(bateria, null, 0, 0),
+		desclassificado, tempo);
 
     }
 

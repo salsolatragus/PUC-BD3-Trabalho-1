@@ -21,9 +21,11 @@ public class Conexao_DB
 {
     public static final String URL = "jdbc:oracle:thin:@139.82.36.250:1521/orcl";
 
-    public static final String NOME = "bd312";
+    public static final String DB = "BD312";
 
-    public static final String SENHA = "bd312";
+    public static final String NOME = "bd313";
+
+    public static final String SENHA = "bd313";
 
     static {
 	try {
@@ -53,7 +55,7 @@ public class Conexao_DB
 
     public void insereCategoria(Categoria cat) throws SQLException {
 	CallableStatement insere = con
-		.prepareCall("{ CALL inserir_Categoria(?,?,?,?,?) }");
+		.prepareCall("{ CALL " + DB + ".inserir_Categoria(?,?,?,?,?) }");
 	try {
 	    insere.setString(1, cat.getNome());
 	    insere.setDate(2, new Date(cat.getDataSelectivas().getTime()));
@@ -68,7 +70,7 @@ public class Conexao_DB
 
     public void insereCompetidor(Competidor comp) throws SQLException {
 	CallableStatement insere = con
-		.prepareCall("{ CALL inserir_Competidor(?,?,?) }");
+		.prepareCall("{ CALL " + DB + ".inserir_Competidor(?,?,?) }");
 	try {
 	    insere.setString(1, comp.getNome());
 	    insere.setString(2, comp.getNacionalidade());
@@ -81,7 +83,7 @@ public class Conexao_DB
 
     public void insereParticipacao(Participacao p) throws SQLException {
 	CallableStatement registra = con
-		.prepareCall("{ CALL registrar_por_Categoria(?,?) }");
+		.prepareCall("{ CALL " + DB + ".registrar_por_Categoria(?,?) }");
 	try {
 	    registra.setInt(1, p.getCompetidor());
 	    registra.setInt(2, p.getCategoria());
@@ -96,14 +98,16 @@ public class Conexao_DB
 	try {
 	    if (p.getDesclassificacao() == Resultado.DESCLASSIFICADO) {
 		insere = con
-			.prepareCall("{ CALL inserir_Desclassificacao(?,?) }");
+			.prepareCall("{ CALL " + DB
+				+ ".inserir_Desclassificacao(?,?) }");
 		insere.setInt(1, p.getCompetidor());
-		insere.setInt(2, p.getBateria());
+		insere.setInt(2, p.getBateria().getId());
 		insere.execute();
 	    } else if (p.getTempo() >= 0) {
-		insere = con.prepareCall("{ CALL inserir_Resultado(?,?,?) }");
+		insere = con.prepareCall("{ CALL " + DB
+			+ ".inserir_Resultado(?,?,?) }");
 		insere.setInt(1, p.getCompetidor());
-		insere.setInt(2, p.getBateria());
+		insere.setInt(2, p.getBateria().getId());
 		insere.setInt(3, p.getTempo());
 		insere.execute();
 	    } else {
@@ -118,7 +122,7 @@ public class Conexao_DB
 
     public void fechaBateria(int bateriaId) throws SQLException {
 	CallableStatement registra = con
-		.prepareCall("{ CALL fechar_Bateria(?) }");
+		.prepareCall("{ CALL " + DB + ".fechar_Bateria(?) }");
 	try {
 	    registra.setInt(1, bateriaId);
 	    registra.execute();
@@ -136,7 +140,8 @@ public class Conexao_DB
 	Statement leitura = con.createStatement();
 	try {
 	    ResultSet res = leitura
-		    .executeQuery("SELECT Id, Nome, Data_selectivas, Data_quartas_de_final, Data_semifinais, Data_final FROM Categoria");
+		    .executeQuery("SELECT Id, Nome, Data_selectivas, Data_quartas_de_final, Data_semifinais, Data_final FROM "
+			    + DB + ".Categoria");
 	    try {
 		while (res.next()) {
 		    int id = res.getInt(1);
@@ -157,12 +162,38 @@ public class Conexao_DB
 	return categorias;
     }
 
+    public Bateria getBateria(int bateriaId) throws SQLException {
+	Bateria bateria = null;
+	PreparedStatement leitura = con
+		.prepareStatement("SELECT Categoria_Nome, Tipo, Numero FROM "
+			+ DB + ".Bateria_Info WHERE Id = ?");
+	try {
+	    leitura.setInt(1, bateriaId);
+	    ResultSet res = leitura.executeQuery();
+	    try {
+		if (res.next()) {
+		    String category = res.getString(1);
+		    int tipo = res.getInt(2);
+		    int numero = res.getInt(3);
+		    bateria = new Bateria(bateriaId, new Categoria(category,
+			    null, null, null, null), tipo, numero);
+		}
+	    } finally {
+		res.close();
+	    }
+	} finally {
+	    leitura.close();
+	}
+	return bateria;
+    }
+
     public List<Competidor> getCompetidores() throws SQLException {
 	List<Competidor> competidores = new ArrayList<Competidor>();
 	Statement leitura = con.createStatement();
 	try {
 	    ResultSet res = leitura
-		    .executeQuery("SELECT Id, Nome, Nacionalidade, Data_de_nacimento FROM Competidor");
+		    .executeQuery("SELECT Id, Nome, Nacionalidade, Data_de_nacimento FROM "
+			    + DB + ".Competidor");
 	    try {
 		while (res.next()) {
 		    int id = res.getInt(1);
@@ -186,7 +217,11 @@ public class Conexao_DB
 	List<Competidor> competidores = new ArrayList<Competidor>();
 
 	PreparedStatement leitura = con
-		.prepareStatement("SELECT Id, Nome, Nacionalidade, Data_de_nacimento FROM Categoria_Competidor LEFT JOIN Competidor ON Competidor = Id WHERE Categoria = ?");
+		.prepareStatement("SELECT Id, Nome, Nacionalidade, Data_de_nacimento FROM "
+			+ DB
+			+ ".Categoria_Competidor LEFT JOIN "
+			+ DB
+			+ ".Competidor ON Competidor = Id WHERE Categoria = ?");
 	try {
 	    leitura.setInt(1, categoria);
 	    ResultSet res = leitura.executeQuery();
@@ -213,13 +248,14 @@ public class Conexao_DB
 	    throws SQLException {
 	List<Resultado> participacoes = new ArrayList<Resultado>();
 	PreparedStatement leitura = con
-		.prepareStatement("SELECT Bateria, Desclassificado, Tempo FROM Participacoes WHERE Competidor = ?");
+		.prepareStatement("SELECT Bateria, Desclassificado, Tempo FROM "
+			+ DB + ".Participacoes WHERE Competidor = ?");
 	try {
 	    leitura.setInt(1, competidor);
 	    ResultSet res = leitura.executeQuery();
 	    try {
 		while (res.next()) {
-		    int bateria = res.getInt(1);
+		    Bateria bateria = getBateria(res.getInt(1));
 		    int desclassificado = res.getInt(2);
 		    int tempo = res.getInt(3);
 		    participacoes.add(new Resultado(competidor, bateria,
@@ -240,14 +276,17 @@ public class Conexao_DB
 	Statement leitura = con.createStatement();
 	try {
 	    ResultSet res = leitura
-		    .executeQuery("SELECT Id, Categoria, Tipo, Numero FROM Bateria_Info WHERE Participantes > Resultados");
+		    .executeQuery("SELECT Id, Categoria_nome, Tipo, Numero FROM "
+			    + DB
+			    + ".Bateria_Info WHERE Participantes > Resultados");
 	    try {
 		while (res.next()) {
 		    int id = res.getInt(1);
-		    int categoria = res.getInt(2);
+		    String categoria = res.getString(2);
 		    int tipo = res.getInt(3);
 		    int numero = res.getInt(4);
-		    baterias.add(new Bateria(id, categoria, tipo, numero));
+		    baterias.add(new Bateria(id, new Categoria(categoria, null,
+			    null, null, null), tipo, numero));
 		}
 	    } finally {
 		res.close();
@@ -262,7 +301,11 @@ public class Conexao_DB
 	    throws SQLException {
 	List<Competidor> competidores = new ArrayList<Competidor>();
 	PreparedStatement leitura = con
-		.prepareStatement("SELECT C.Id, Nome, Nacionalidade, Data_de_nacimento FROM Participacoes LEFT JOIN Competidor C ON Competidor = C.Id WHERE Bateria = ? AND Desclassificado IS NULL");
+		.prepareStatement("SELECT C.Id, Nome, Nacionalidade, Data_de_nacimento FROM "
+			+ DB
+			+ ".Participacoes LEFT JOIN "
+			+ DB
+			+ ".Competidor C ON Competidor = C.Id WHERE Bateria = ? AND Desclassificado IS NULL");
 	try {
 	    leitura.setInt(1, bateriaId);
 	    ResultSet res = leitura.executeQuery();
@@ -289,14 +332,17 @@ public class Conexao_DB
 	Statement leiture = con.createStatement();
 	try {
 	    ResultSet res = leiture
-		    .executeQuery("SELECT Id, Categoria, Tipo, Numero FROM Bateria_Info WHERE Participantes = Resultados AND Fechado IS NULL");
+		    .executeQuery("SELECT Id, Categoria_nome, Tipo, Numero FROM "
+			    + DB
+			    + ".Bateria_Info WHERE Participantes = Resultados AND Fechado IS NULL");
 	    try {
 		while (res.next()) {
 		    int id = res.getInt(1);
-		    int categoria = res.getInt(2);
+		    String categoria = res.getString(2);
 		    int tipo = res.getInt(3);
 		    int numero = res.getInt(4);
-		    baterias.add(new Bateria(id, categoria, tipo, numero));
+		    baterias.add(new Bateria(id, new Categoria(categoria, null,
+			    null, null, null), tipo, numero));
 		}
 	    } finally {
 		res.close();

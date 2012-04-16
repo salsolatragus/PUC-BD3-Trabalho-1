@@ -7,13 +7,13 @@ public class Resultado {
 
     private final int competidor;
 
-    private final int bateria;
+    private final Bateria bateria;
 
     private final int desclassificacao;
 
     private final int tempo;
 
-    public Resultado(int competidor, int bateria, int desclassificacao,
+    public Resultado(int competidor, Bateria bateria, int desclassificacao,
 	    int tempo) {
 	super();
 	this.competidor = competidor;
@@ -26,7 +26,7 @@ public class Resultado {
 	return competidor;
     }
 
-    public int getBateria() {
+    public Bateria getBateria() {
 	return bateria;
     }
 
@@ -36,5 +36,20 @@ public class Resultado {
 
     public int getTempo() {
 	return tempo;
+    }
+
+    @Override
+    public String toString() {
+	StringBuffer buf = new StringBuffer();
+	buf.append(getBateria());
+	buf.append("\n => ");
+	if (getDesclassificacao() == DESCLASSIFICADO) {
+	    buf.append("Desclassificado");
+	} else if (getTempo() > 0) {
+	    buf.append("Tempo: " + getTempo() + " segundos");
+	} else {
+	    buf.append("Resultado ainda falta...");
+	}
+	return buf.toString();
     }
 }

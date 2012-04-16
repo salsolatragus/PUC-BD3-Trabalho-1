@@ -85,9 +85,9 @@ VIEW Bateria_Info AS
   SELECT
     Bateria.Id,
     Bateria.Categoria,
+    Categoria.Nome AS Categoria_Nome,
     Bateria.Tipo,
     Bateria.Numero,
-    Bateria.Fechado,
     -- escolhe a data da bateria por tipo dela
     (CASE
       WHEN Tipo = 1 THEN Data_final
@@ -104,6 +104,7 @@ VIEW Bateria_Info AS
     (SELECT SUM(CASE WHEN (Desclassificado IS NOT NULL OR Tempo IS NOT NULL) THEN 1 ELSE 0 END)
      FROM Participacoes
      WHERE Bateria = Bateria.Id
-     GROUP BY Bateria) AS Resultados
+     GROUP BY Bateria) AS Resultados,
+    Bateria.Fechado
   FROM Bateria, Categoria
   WHERE Bateria.Categoria = Categoria.Id;

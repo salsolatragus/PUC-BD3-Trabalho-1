@@ -55,16 +55,17 @@ public class MenuPublico extends AMenu {
 			List<Competidor> competidores = con
 				.getCompetidoresDeCategoria(categoriaId);
 
+			System.out.println();
+			System.out.println("-------------------------------");
+			System.out.println("- Participantes");
+			System.out.println("-------------------------------");
 			for (int i = 0; i < competidores.size(); i++) {
-			    Competidor competidor = competidores.get(i);
-			    System.out.println("Nome: " + competidor.getNome());
-			    System.out.println("Nacionalidade: "
-				    + competidor.getNacionalidade());
-			    System.out.println("Data de Nascimento: "
-				    + competidor.getDataDeNacimento());
+			    System.out.println(" * "
+				    + competidores.get(i).toString());
 			    System.out
 				    .println("-------------------------------");
 			}
+			System.out.println();
 		    } catch (SQLException sqle) {
 			sqle.printStackTrace(System.err);
 		    }
@@ -86,15 +87,16 @@ public class MenuPublico extends AMenu {
 			List<Resultado> resultados = con
 				.getResultadosDoCompetidor(competidorId);
 
-			for (Resultado part : resultados) {
-			    System.out.println("Bateria: " + part.getBateria());
-			    System.out.println("Desclassificado: "
-				    + part.getDesclassificacao());
-			    System.out.println("Tempo: " + part.getTempo()
-				    + " segundos");
+			System.out.println();
+			System.out.println("-------------------------------");
+			System.out.println("- Resultados");
+			System.out.println("-------------------------------");
+			for (Resultado res : resultados) {
+			    System.out.println(res.toString());
 			    System.out
 				    .println("-------------------------------");
 			}
+			System.out.println();
 		    } catch (SQLException sqle) {
 			sqle.printStackTrace(System.err);
 		    }

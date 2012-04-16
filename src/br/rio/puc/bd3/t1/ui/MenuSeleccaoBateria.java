@@ -10,8 +10,7 @@ public abstract class MenuSeleccaoBateria extends AMenu {
 	Opcao[] opcoes = new Opcao[baterias.size()];
 	for (int i = 0; i < baterias.size(); i++) {
 	    Bateria cur = baterias.get(i);
-	    opcoes[i] = new Opcao(cur.getId(), "Categoria " + cur.getCategory()
-		    + ", " + cur.getTipoPretty() + " " + cur.getNumero());
+	    opcoes[i] = new Opcao(cur.getId(), cur.toString());
 	}
 	return opcoes;
     }

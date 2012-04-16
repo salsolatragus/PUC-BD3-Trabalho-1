@@ -4,13 +4,13 @@ public class Bateria {
 
     private final int id;
 
-    private final int category;
+    private final Categoria category;
 
     private final int tipo;
 
     private final int numero;
 
-    public Bateria(int id, int category, int tipo, int numero) {
+    public Bateria(int id, Categoria category, int tipo, int numero) {
 	super();
 	this.id = id;
 	this.category = category;
@@ -22,7 +22,7 @@ public class Bateria {
 	return id;
     }
 
-    public int getCategory() {
+    public Categoria getCategory() {
 	return category;
     }
 
@@ -47,5 +47,10 @@ public class Bateria {
 
     public int getNumero() {
 	return numero;
+    }
+
+    @Override
+    public String toString() {
+	return getCategory() + ", " + getTipoPretty() + " " + getNumero();
     }
 }

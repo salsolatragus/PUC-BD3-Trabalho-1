@@ -39,4 +39,10 @@ public class Competidor {
     public Date getDataDeNacimento() {
 	return dataDeNacimento;
     }
+
+    @Override
+    public String toString() {
+	return getNome() + ", Pais: " + getNacionalidade()
+		+ ", Data de nacimento: " + getDataDeNacimento();
+    }
 }

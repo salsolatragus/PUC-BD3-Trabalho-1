@@ -56,4 +56,9 @@ public class Categoria {
     public Date getDataFinal() {
 	return dataFinal;
     }
+
+    @Override
+    public String toString() {
+	return "Categoria " + getNome();
+    }
 }
