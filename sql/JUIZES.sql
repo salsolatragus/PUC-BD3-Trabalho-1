@@ -71,23 +71,29 @@ IS
                         AND ROWNUM <= 2
                        ORDER BY Tempo ASC;
   resultados_desaparecidas EXCEPTION;
+  ja_fechado EXCEPTION;
 BEGIN
   OPEN c_bateria;
   FETCH c_bateria INTO v_bateria_info;
   CLOSE c_bateria;
   
   IF v_bateria_info.Tipo > 1 THEN
-    IF v_bateria_info.Participantes > v_bateria_info.Resultados THEN
-      RAISE resultados_desaparecidas;
-    ELSE
-      OPEN c_melhores;
-      LOOP
-        FETCH c_melhores INTO v_competidor;
-        EXIT WHEN c_melhores%NOTFOUND;
+    IF v_bateria_info.Fechado = NULL THEN
+      RAISE ja_fechado;
+    ELSE IF v_bateria_info.Participantes > v_bateria_info.Resultados THEN
+        RAISE resultados_desaparecidas;
+      ELSE
+        OPEN c_melhores;
+        LOOP
+          FETCH c_melhores INTO v_competidor;
+          EXIT WHEN c_melhores%NOTFOUND;
+          
+         registrar_por_Prova(v_competidor, v_bateria_info.Tipo - 1, v_bateria_info.Categoria);
+        END LOOP;
+        CLOSE c_melhores;
         
-        registrar_por_Prova(v_competidor, v_bateria_info.Tipo - 1, v_bateria_info.Categoria);
-      END LOOP;
-      CLOSE c_melhores;
+        UPDATE Bateria SET Fechado = 1 WHERE Id = v_bateria;
+      END IF;
     END IF;
   END IF;
 END fechar_Bateria;

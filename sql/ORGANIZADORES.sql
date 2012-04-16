@@ -87,6 +87,7 @@ VIEW Bateria_Info AS
     Bateria.Categoria,
     Bateria.Tipo,
     Bateria.Numero,
+    Bateria.Fechado,
     -- escolhe a data da bateria por tipo dela
     (CASE
       WHEN Tipo = 1 THEN Data_final

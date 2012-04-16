@@ -32,6 +32,9 @@ public class MenuOrganizador extends AMenu {
 
 	try {
 	    con.insereCategoria(cat.getCategoria());
+	    System.out.println();
+	    System.out.println("=> Categoria inserido com successo!");
+	    System.out.println();
 	} catch (SQLException sqle) {
 	    sqle.printStackTrace(System.err);
 	}

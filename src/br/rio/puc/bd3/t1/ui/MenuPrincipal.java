@@ -8,11 +8,14 @@ public class MenuPrincipal extends AMenu {
 
     public static final int JUIZ = 3;
 
+    public static final int PUBLICO = 4;
+
     public MenuPrincipal() {
 	super("Menu principal", new Opcao[] {
 		new Opcao(ORGANIZADOR, "Fazer login como organizador"),
 		new Opcao(COMPETIDOR, "Fazer login como competidor"),
-		new Opcao(JUIZ, "Fazer login como juiz")
+		new Opcao(JUIZ, "Fazer login como juiz"),
+		new Opcao(PUBLICO, "Usar menu público")
 	});
     }
 
@@ -35,10 +38,15 @@ public class MenuPrincipal extends AMenu {
 	    System.out.println();
 	    (new MenuJuiz()).show();
 	    break;
+	case PUBLICO:
+	    System.out.println("... Bem vindo, desconhecido!");
+	    System.out.println();
+	    (new MenuPublico()).show();
+	    break;
 	}
     }
 
     public static void main(String[] args) {
-	(  new MenuPrincipal()).show();
+	(new MenuPrincipal()).show();
     }
 }

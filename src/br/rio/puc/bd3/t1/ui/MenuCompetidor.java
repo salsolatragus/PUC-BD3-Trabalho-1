@@ -39,6 +39,9 @@ public class MenuCompetidor extends AMenu {
 
 	try {
 	    con.insereCompetidor(cat.getCompetidor());
+	    System.out.println();
+	    System.out.println(" => Competidor inserido com successo!");
+	    System.out.println();
 	} catch (SQLException sqle) {
 	    sqle.printStackTrace(System.err);
 	}
@@ -57,12 +60,21 @@ public class MenuCompetidor extends AMenu {
 				try {
 				    con.insereParticipacao(new Participacao(
 					    categoriaId, competidorId));
+				    System.out.println();
+				    System.out
+					    .println(" => Participação inserido com successo!");
+				    System.out
+					    .println(" Quer participar em mais um categoria?");
+				    System.out.println();
 				} catch (SQLException sqle) {
 				    sqle.printStackTrace(System.err);
 				}
 
 			    }
 			}).show();
+			System.out.println();
+			System.out.println(" Quer registrar outro competidor?");
+			System.out.println();
 		    } catch (SQLException sqle) {
 			sqle.printStackTrace(System.err);
 		    }

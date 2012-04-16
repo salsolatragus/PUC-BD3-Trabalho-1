@@ -36,7 +36,8 @@ CREATE OR REPLACE
 VIEW Bateria_aberta AS
   SELECT Id, Categoria, Tipo, Numero
   FROM Bateria_Info
-  WHERE 8 > Participantes OR Participantes IS NULL;
+  WHERE (8 > Participantes OR Participantes IS NULL)
+    AND Fechado IS NULL;
 
 
 CREATE OR REPLACE

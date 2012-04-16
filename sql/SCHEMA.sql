@@ -16,6 +16,7 @@ CREATE TABLE Bateria (
   Categoria INTEGER NOT NULL,
   Tipo INTEGER NOT NULL,
   Numero INTEGER NOT NULL,
+  Fechado INTEGER,
   
   UNIQUE (Categoria, Tipo, Numero),
   CONSTRAINT fk_Categoria FOREIGN KEY (Categoria) REFERENCES Categoria(Id),
