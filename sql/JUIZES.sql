@@ -65,11 +65,12 @@ IS
                       WHERE Id = v_bateria;
   v_competidor NUMBER;
   CURSOR c_melhores IS SELECT Competidor
-                       FROM Participacoes
-                       WHERE Bateria = v_bateria
-                        AND Tempo IS NOT NULL
-                        AND ROWNUM <= 2
-                       ORDER BY Tempo ASC;
+                       FROM (SELECT Competidor
+                             FROM Participacoes
+                             WHERE Bateria = v_bateria
+                               AND Tempo IS NOT NULL
+                             ORDER BY Tempo ASC)
+                       WHERE ROWNUM <= 2;
   resultados_desaparecidas EXCEPTION;
   ja_fechado EXCEPTION;
 BEGIN
@@ -97,3 +98,22 @@ BEGIN
     END IF;
   END IF;
 END fechar_Bateria;
+
+
+CREATE OR REPLACE
+VIEW Categoria_Info AS
+  SELECT
+    C.Id,
+    C.Nome,
+    C.Data_selectivas,
+    C.Data_quartas_de_final,
+    C.Data_semifinais,
+    C.Data_final,
+    (SELECT Tipo
+     FROM (SELECT B.Tipo, B.Categoria
+           FROM Bateria B
+           WHERE B.Fechado IS NULL
+           ORDER BY B.Tipo DESC)
+     WHERE Categoria = C.Id
+       AND ROWNUM = 1) AS Fase
+  FROM Categoria C;

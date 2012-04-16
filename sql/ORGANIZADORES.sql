@@ -83,28 +83,31 @@ END excluir_Categoria;
 CREATE OR REPLACE
 VIEW Bateria_Info AS
   SELECT
-    Bateria.Id,
-    Bateria.Categoria,
-    Categoria.Nome AS Categoria_Nome,
-    Bateria.Tipo,
-    Bateria.Numero,
+    B.Id,
+    B.Categoria,
+    C.Nome AS Categoria_Nome,
+    B.Tipo,
+    B.Numero,
     -- escolhe a data da bateria por tipo dela
     (CASE
-      WHEN Tipo = 1 THEN Data_final
-      WHEN Tipo = 2 THEN Data_semifinais
-      WHEN Tipo = 3 THEN Data_quartas_de_final
-      WHEN Tipo = 4 THEN Data_selectivas
+      WHEN B.Tipo = 1 THEN Data_final
+      WHEN B.Tipo = 2 THEN Data_semifinais
+      WHEN B.Tipo = 3 THEN Data_quartas_de_final
+      WHEN B.Tipo = 4 THEN Data_selectivas
      END) AS Data,
     -- conta as participacoes na bateria
-    (SELECT COUNT(*)
+    NVL((SELECT COUNT(*)
      FROM Participacoes
-     WHERE Bateria = Bateria.Id
-     GROUP BY Bateria) AS Participantes,
+     WHERE Bateria = B.Id
+     GROUP BY Bateria),0) AS Participantes,
     -- conta as participacoes com resultado na bateria
-    (SELECT SUM(CASE WHEN (Desclassificado IS NOT NULL OR Tempo IS NOT NULL) THEN 1 ELSE 0 END)
+    NVL((SELECT SUM(CASE WHEN (Desclassificado IS NOT NULL OR Tempo IS NOT NULL) THEN 1 ELSE 0 END)
      FROM Participacoes
-     WHERE Bateria = Bateria.Id
-     GROUP BY Bateria) AS Resultados,
-    Bateria.Fechado
-  FROM Bateria, Categoria
-  WHERE Bateria.Categoria = Categoria.Id;
+     WHERE Bateria = B.Id
+     GROUP BY Bateria),0) AS Resultados,
+    B.Fechado,
+    (CASE
+      WHEN B.Tipo = C.Fase THEN 1
+      ELSE 0
+     END) AS Na_fase_atual
+  FROM Bateria B LEFT JOIN Categoria_Info C ON B.Categoria = C.Id;

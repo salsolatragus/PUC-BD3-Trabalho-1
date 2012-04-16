@@ -334,7 +334,7 @@ public class Conexao_DB
 	    ResultSet res = leiture
 		    .executeQuery("SELECT Id, Categoria_nome, Tipo, Numero FROM "
 			    + DB
-			    + ".Bateria_Info WHERE Participantes = Resultados AND Fechado IS NULL");
+			    + ".Bateria_Info WHERE Participantes = Resultados AND Fechado IS NULL AND Na_fase_atual = 1");
 	    try {
 		while (res.next()) {
 		    int id = res.getInt(1);

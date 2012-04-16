@@ -9,7 +9,7 @@ begin
 end;
 
 SELECT * FROM Categoria;
-SELECT * FROM Bateria WHERE Categoria = 21;
+SELECT * FROM Bateria WHERE Categoria = 43;
 
 begin
   inserir_Competidor('Sven', 'GER', '20-JUN-1987');
@@ -43,3 +43,8 @@ SELECT * FROM Bateria_Aberta;
 begin
   fechar_Bateria(1);
 end;
+
+DELETE FROM Categoria;
+DELETE FROM Bateria;
+DELETE FROM Participacoes;
+DELETE FROM Competidor;
