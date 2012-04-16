@@ -12,7 +12,8 @@ public class ADialogo {
 
     protected static enum TIPO {
 	STRING,
-	DATA
+	DATA ,
+	INT
     }
 
     protected static class Caracteristica {
@@ -36,12 +37,17 @@ public class ADialogo {
     private final Map<Integer, String> valoresString;
 
     private final Map<Integer, Date> valoresData;
+    
+    private final Map<Integer, Integer> valoresInt ;
+    
 
     public ADialogo(String titulo, Caracteristica[] caracteristicas) {
 	this.titulo = titulo;
 	this.caracteristicas = caracteristicas;
 	valoresString = new HashMap<Integer, String>();
 	valoresData = new HashMap<Integer, Date>();
+	valoresInt =  new HashMap<Integer, Integer >();
+
     }
 
     public Caracteristica[] getCaracteristicas() {
@@ -63,6 +69,10 @@ public class ADialogo {
 	    case DATA:
 		valoresData.put(c.id, leData(c, res));
 		break;
+	    
+	    case INT :
+	   valoresInt.put( c.id , leInt( c ,res )) ;	    	
+	  
 	    }
 	}
     }
@@ -85,6 +95,25 @@ public class ADialogo {
 	} while (data == null);
 	return data;
     }
+    
+   private int leInt(Caracteristica c, Scanner res)
+   {
+	   //Integer teste = null;
+	   
+	   System.out.print(c.nome + ": ");
+	    
+       	try 
+    	{    	
+	    }
+    	
+    	catch (Exception e)
+    	{
+    		System.err.println("Número inválido! Tente novamente...");
+
+    	} 
+    	
+    	return res.nextInt() ;
+   }
 
     public String getValorString(int cId) {
 	return valoresString.get(cId);
@@ -93,4 +122,9 @@ public class ADialogo {
     public Date getValorDate(int cId) {
 	return valoresData.get(cId);
     }
+    
+    public Integer getValorInt(int cId) {
+    	return valoresInt.get(cId);
+        }
+
 }

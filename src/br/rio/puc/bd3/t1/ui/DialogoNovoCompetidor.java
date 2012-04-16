@@ -27,10 +27,12 @@ public class DialogoNovoCompetidor extends ADialogo {
 		});
     }
 
-    public Competidor getCompetidor() {
+    public Competidor getCompetidor() 
+    {
 	String nome = getValorString(NOME);
 	String nacionalidade = getValorString(NACIONALIDADE);
 	Date nacimento = getValorDate(NACIMENTO);
 	return new Competidor(nome, nacionalidade, nacimento);
+   
     }
 }

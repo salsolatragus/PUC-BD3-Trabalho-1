@@ -88,7 +88,40 @@ public class Conexao_DB
 	    registra.close();
 	}
     }
+    
+      
+    
+    
+    public void insereParticipacao2(Participacao p) throws SQLException {
+	CallableStatement registra = con
+		.prepareCall("{ CALL registra_Resultados(?,?,?) }");
 
+	try {
+		registra.setInt(1, p.getCompetidor());
+	    registra.setInt(2, p.getDesclassificado());
+	    registra.setInt(3, p.getTempo());
+	    
+	    registra.execute();
+	} finally {
+	    registra.close();
+	}   
+    }
+
+    
+    public void fechaBateria(Participacao p) throws SQLException {
+		CallableStatement registra = con
+			.prepareCall("{ CALL fechar_Bateria(?) }");
+		try {
+		    registra.setInt(1, p.getBateria());
+		    registra.execute();
+		} finally {
+		    registra.close();
+		}
+    }
+    
+    
+    
+    
     void insereResultado()
     {
 

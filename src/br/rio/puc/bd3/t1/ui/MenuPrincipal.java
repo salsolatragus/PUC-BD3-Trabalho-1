@@ -39,6 +39,6 @@ public class MenuPrincipal extends AMenu {
     }
 
     public static void main(String[] args) {
-	(new MenuPrincipal()).show();
+	(  new MenuPrincipal()).show();
     }
 }
