@@ -9,7 +9,9 @@ begin
 end;
 
 SELECT * FROM Categoria;
-SELECT * FROM Bateria WHERE Categoria = 43;
+SELECT * FROM Categoria_Info;
+SELECT * FROM Bateria WHERE Categoria = 44;
+SELECT * FROM Bateria_Info WHERE Categoria = 44;
 
 begin
   inserir_Competidor('Sven', 'GER', '20-JUN-1987');
@@ -31,6 +33,7 @@ end;
 
 SELECT * FROM Categoria_Competidor;
 SELECT * FROM Participacoes;
+SELECT * FROM Participacao_Info;
 
 begin
   --inserir_Resultado(6,1,6500);

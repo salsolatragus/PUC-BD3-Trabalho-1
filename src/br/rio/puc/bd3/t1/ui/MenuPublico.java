@@ -21,7 +21,7 @@ public class MenuPublico extends AMenu {
 		{
 			new Opcao(
 				CONSULTA_PARTICIPANTES,
-				"Consultar participantes das Seletivas de uma categoria"),
+				"Consultar participantes atuais de uma categoria"),
 			new Opcao(
 				CONSULTA_BATERIAS,
 				"Consultar baterias que um competidor participou")
@@ -53,7 +53,7 @@ public class MenuPublico extends AMenu {
 			final int categoriaId) {
 		    try {
 			List<Competidor> competidores = con
-				.getCompetidoresDeCategoria(categoriaId);
+				.getCompetidoresAtuaisDeCategoria(categoriaId);
 
 			System.out.println();
 			System.out.println("-------------------------------");

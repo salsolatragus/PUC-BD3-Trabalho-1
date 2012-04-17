@@ -96,8 +96,7 @@ END registrar_por_Prova;
 
 CREATE OR REPLACE
 VIEW Categoria_Competidor AS
-  SELECT Categoria.Id AS Categoria, Competidor.Id AS Competidor
-  FROM Categoria, Bateria, Participacoes, Competidor
-  WHERE Categoria.Id = Bateria.Categoria
-    AND Bateria.Id = Participacoes.Bateria
-    AND Participacoes.Competidor = Competidor.Id;
+  SELECT Categoria, Competidor, MIN(B.Tipo) AS Fase
+  FROM Bateria B, Participacoes P
+  WHERE B.Id = P.Bateria
+  GROUP BY Categoria, Competidor;

@@ -212,16 +212,14 @@ public class Conexao_DB
 	return competidores;
     }
 
-    public List<Competidor> getCompetidoresDeCategoria(int categoria)
+    public List<Competidor> getCompetidoresAtuaisDeCategoria(int categoria)
 	    throws SQLException {
 	List<Competidor> competidores = new ArrayList<Competidor>();
 
 	PreparedStatement leitura = con
-		.prepareStatement("SELECT Id, Nome, Nacionalidade, Data_de_nacimento FROM "
+		.prepareStatement("SELECT Competidor, Nome, Nacionalidade, Data_de_nacimento FROM "
 			+ DB
-			+ ".Categoria_Competidor LEFT JOIN "
-			+ DB
-			+ ".Competidor ON Competidor = Id WHERE Categoria = ?");
+			+ ".Participacao_Info WHERE Categoria = ? AND Na_fase_atual = 1");
 	try {
 	    leitura.setInt(1, categoria);
 	    ResultSet res = leitura.executeQuery();
